@@ -1,4 +1,4 @@
-rootProject.name = 'kotlin-webserver-2018'
+rootProject.name = 'kotlin-app-2018'
 include 'common'
 include 'common-jvm'
 include 'backend'
