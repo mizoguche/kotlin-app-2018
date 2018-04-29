@@ -1,2 +1,5 @@
 rootProject.name = 'kotlin-webserver-2018'
+include 'common'
+include 'common-jvm'
+include 'backend'
 

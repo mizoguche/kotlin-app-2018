@@ -1,12 +1,12 @@
 package info.mizoguche.kotlinserver2018
 
+import info.mizoguche.kotlinserver2018.presentation.response.HelloResponse
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.gson.gson
-import io.ktor.http.ContentType
-import io.ktor.response.respondText
+import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
@@ -27,7 +27,7 @@ fun Application.main() {
 
     routing {
         get("/") {
-            call.respondText("Hello, Kotlin server!", ContentType.Text.Plain)
+            call.respond(HelloResponse("Hello, Kotlin server!"))
         }
     }
 }
