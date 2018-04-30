@@ -1,0 +1,72 @@
+buildscript {
+//    apply from: "versions.gradle"
+
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "http://dl.bintray.com/kotlin/kotlin-dev" }
+        mavenCentral()
+    }
+}
+
+plugins {
+    id "com.moowork.node" version "1.2.0"
+}
+
+apply plugin: 'kotlin2js'
+apply plugin: "kotlin-dce-js"
+apply plugin: "com.moowork.node"
+
+node {
+    download = true
+}
+
+repositories {
+    maven { url "http://dl.bintray.com/kotlin/kotlin-dev" }
+    maven { url "http://dl.bintray.com/kotlinx/kotlinx" }
+    maven { url "http://dl.bintray.com/hypnosphi/kotlin-wrappers" }
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":common-js")
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+}
+
+compileKotlin2Js {
+    kotlinOptions {
+        sourceMap = true
+        sourceMapEmbedSources = "always"
+        moduleKind = 'commonjs'
+        metaInfo = false
+    }
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
+task assembleWeb(type: Sync) {
+    configurations.compile.each { File file ->
+        from(zipTree(file.absolutePath), {
+            includeEmptyDirs = false
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") ||
+                        !path.startsWith("META-INF/"))
+            }
+        })
+    }
+    from compileKotlin2Js.destinationDir
+    into "${projectDir}/web"
+
+    dependsOn classes
+}
+
+clean.doFirst {
+    delete "${projectDir}/web"
+}
+
+assemble.dependsOn assembleWeb

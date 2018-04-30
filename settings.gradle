@@ -2,4 +2,6 @@ rootProject.name = 'kotlin-app-2018'
 include 'common'
 include 'common-jvm'
 include 'backend'
+include 'web'
+include 'common-js'
 
